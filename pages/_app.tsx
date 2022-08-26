@@ -1,5 +1,6 @@
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import type { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Loading from '../components/Loading';
@@ -10,6 +11,8 @@ import Login from './login';
 function MyApp({ Component, pageProps }: AppProps) {
   // hooks
   const [loggedInUser, loading, _error] = useAuthState(auth);
+
+  const router = useRouter();
 
   useEffect(() => {
     const setUserInDb = async () => {
