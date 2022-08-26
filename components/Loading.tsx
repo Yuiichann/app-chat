@@ -1,7 +1,9 @@
 import { CircularProgress } from '@mui/material';
+import Head from 'next/head';
 import Image from 'next/image';
 import styled from 'styled-components';
 import WhatsAppLogo from '../assets/img/whatsapplogo.png';
+
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -17,6 +19,9 @@ const StyledImageWrapper = styled.div`
 const Loading = () => {
   return (
     <StyledContainer>
+      <Head>
+        <title>Loading . . .</title>
+      </Head>
       <StyledImageWrapper>
         <Image src={WhatsAppLogo} alt="WhatApp Logo" height={200} width={200} />
       </StyledImageWrapper>

@@ -28,6 +28,7 @@ const StyledImageWrapper = styled.div`
 `;
 
 const Login = () => {
+  // hooks
   const [signInWithGoogle, _user, _loading, _error] = useSignInWithGoogle(auth);
 
   const signIn = () => {
