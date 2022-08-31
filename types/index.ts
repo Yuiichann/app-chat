@@ -6,6 +6,14 @@ export interface Conversation {
 
 export interface AppUser {
   email: string;
-  lastseen: Timestamp;
+  lastSeen: Timestamp;
   photoURL: string;
+}
+
+export interface IMessage {
+  id: string;
+  conversation_id: string;
+  text: string;
+  send_at: string;
+  user: string;
 }

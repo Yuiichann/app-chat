@@ -46,7 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   // loggedInUser from hooks --> if user logged, loggedInUser will save user info, and opposite
   if (!loggedInUser) return <Login />;
 
-  // all done, App UI will rendered
+  // all done, App UI will be render
   return <Component {...pageProps} />;
 }
 

@@ -1,22 +1,36 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, getDocs } from 'firebase/firestore';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import styled from 'styled-components';
+import ConversationScreen from '../../components/ConversationScreen';
 import Sidebar from '../../components/Sidebar';
 import { auth, db } from '../../config/firebase';
-import { Conversation } from '../../types';
+import { Conversation, IMessage } from '../../types';
+import { getMessagesInConversation, transformMessage } from '../../utils/getMessagesInConversation';
 import { getRecipientEmail } from '../../utils/getRecipientEmail';
 
 interface Props {
   conversation: Conversation;
+  messages: IMessage[];
 }
 
 const StyledContainer = styled.div`
   display: flex;
 `;
 
-const Conversation = ({ conversation }: Props) => {
+const StyledConversationContainer = styled.div`
+  flex-grow: 1;
+  overflow: scroll;
+  height: 100vh;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+
+const Conversation = ({ conversation, messages }: Props) => {
   const [loggedInUser, __loading, __error] = useAuthState(auth);
 
   return (
@@ -27,7 +41,9 @@ const Conversation = ({ conversation }: Props) => {
 
       <Sidebar />
 
-      <h1>Message</h1>
+      <StyledConversationContainer>
+        <ConversationScreen conversation={conversation} messages={messages} />
+      </StyledConversationContainer>
     </StyledContainer>
   );
 };
@@ -41,9 +57,17 @@ export const getServerSideProps: GetServerSideProps<Props, { id: string }> = asy
   const conversationRef = doc(db, 'conversations', conversationId as string);
   const conversationSnapshot = await getDoc(conversationRef);
 
+  // get all messages between logged in user and recipient in this conversation
+  const queryMessages = getMessagesInConversation(conversationId); //custom func
+
+  const messagesSnapshot = await getDocs(queryMessages);
+
+  const messages = messagesSnapshot.docs.map((messageDoc) => transformMessage(messageDoc));
+
   return {
     props: {
       conversation: conversationSnapshot.data() as Conversation,
+      messages,
     },
   };
 };
